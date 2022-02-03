@@ -24,6 +24,21 @@ function createProductItemElement({ sku, name, image }) {
   return section;
 }
 
+// requisito 1: criar lista de produtos
+async function createProductsList(product) {
+  const classItems = document.querySelector('.items');
+  const newArray = await fetchProducts(product); // requisição da API, q retorna arquivo Json.
+  newArray.results.forEach((element) => {
+    const newObject = {
+      sku: element.id,
+      name: element.title,
+      image: element.thumbnail,
+    };
+    const productSection = createProductItemElement(newObject);
+    classItems.appendChild(productSection);
+  });
+}
+
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
@@ -41,4 +56,6 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
-window.onload = () => { };
+window.onload = () => {
+  createProductsList('computador');
+ };
