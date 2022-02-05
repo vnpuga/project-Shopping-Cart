@@ -81,10 +81,19 @@ async function createProductsList(product) {
   addProductsCart();
 }
 
+// requisito 6: Apagar carrinho.
+function clear() {
+  const btn = document.querySelector('.empty-cart');
+  btn.addEventListener('click', () => {
+    olRecuperada.innerHTML = '';
+  });
+}
+
 window.onload = () => {
   createProductsList('computador');
   olRecuperada.innerHTML = getSavedCartItems('cartItems');
   // recuperar evento de click após carregamento da pg, p/permitir remover itens do localStorage
   const liRecuperada = document.querySelectorAll('li');
   liRecuperada.forEach((li) => li.addEventListener('click', cartItemClickListener));
+  clear();
 };
