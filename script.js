@@ -1,3 +1,6 @@
+// para usar no requisito 4, sobre localStorage.
+const olRecuperada = document.querySelector('.cart__items');
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -27,6 +30,7 @@ function createProductItemElement({ sku, name, image }) {
 // requisito 3: Remova o item do carrinho de compras ao clicar nele
 function cartItemClickListener(event) {
   event.target.remove();
+  saveCartItems('cartItems', olRecuperada.innerHTML);
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -42,12 +46,14 @@ function getSkuFromProductItem(item) {
 }
 
 // requisito 2: Adicione o produto ao carrinho de compras.
+// Sou grata aos amigos Kaique, Pedro, Philippe, pela ajuda neste requisito, não teria conseguido sem eles.
 async function olCartItems(id) {
   const ol = document.querySelector('.cart__items'); 
   const response = await fetchItem(id); // requisição da API, q retorna arquivo Json, de um único item
   const { id: sku, title: name, price: salePrice } = response;
   const cartItem = createCartItemElement({ sku, name, salePrice });
   ol.appendChild(cartItem);
+  saveCartItems('cartItems', olRecuperada.innerHTML);
 }
 
 async function addProductsCart() {
@@ -77,4 +83,8 @@ async function createProductsList(product) {
 
 window.onload = () => {
   createProductsList('computador');
+  olRecuperada.innerHTML = getSavedCartItems('cartItems');
+  // recuperar evento de click após carregamento da pg, p/permitir remover itens do localStorage
+  const liRecuperada = document.querySelectorAll('li');
+  liRecuperada.forEach((li) => li.addEventListener('click', cartItemClickListener));
 };
