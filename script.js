@@ -27,10 +27,27 @@ function createProductItemElement({ sku, name, image }) {
   return section;
 }
 
+// Requisito 5 Some o valor total dos itens do carrinho de compras
+function totalPrice() {
+  const li = document.querySelectorAll('li');
+  const pTotalPrice = document.querySelector('.total-price');
+  const array = [];
+  if (li.length === 0) {
+    pTotalPrice.innerText = 0;
+  } else {
+    li.forEach((item) => {
+      array.push((parseFloat(item.innerText.split(' ').pop().slice(1))));
+      const arrayResult = array.reduce((acc, curr) => acc + curr, 0); // toFixed nao passa no teste (retirei)
+      pTotalPrice.innerText = arrayResult;
+    });  
+  }
+}
+
 // requisito 3: Remova o item do carrinho de compras ao clicar nele
 function cartItemClickListener(event) {
   event.target.remove();
   saveCartItems('cartItems', olRecuperada.innerHTML);
+  totalPrice();
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -54,6 +71,7 @@ async function olCartItems(id) {
   const cartItem = createCartItemElement({ sku, name, salePrice });
   ol.appendChild(cartItem);
   saveCartItems('cartItems', olRecuperada.innerHTML);
+  totalPrice();
 }
 
 async function addProductsCart() {
@@ -62,7 +80,7 @@ async function addProductsCart() {
       const parent = botao.parentElement; // acessando a seção class="item".
       const id = parent.firstChild.innerText; // capturando o id.
       botao.addEventListener('click', () => olCartItems(id));
-    });
+    });  
 }
 
 // requisito 1: criar lista de produtos
@@ -86,6 +104,7 @@ function clear() {
   const btn = document.querySelector('.empty-cart');
   btn.addEventListener('click', () => {
     olRecuperada.innerHTML = '';
+    saveCartItems('cartItems', olRecuperada.innerHTML);
   });
 }
 
